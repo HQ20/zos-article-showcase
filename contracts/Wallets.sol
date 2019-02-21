@@ -8,15 +8,21 @@ contract Wallets {
     //
     struct Wallet {
         uint256 balance;
-        uint8 deposits;
     }
     Roles.Data private roles;
     mapping(address => Wallet) internal wallets;
     address[] private usersArray;
 
     //
-    function initWallets() public {
-        Roles.setRole(roles, msg.sender, Roles.Role.Admin);
+    function _initWallet(address _owner) internal {
+        Roles.setRole(roles, _owner, Roles.Role.Admin);
+    }
+
+    //
+    function deposit() public payable {
+        Wallet memory wallet = wallets[msg.sender];
+        wallet.balance = wallet.balance.add(msg.value);
+        wallets[msg.sender] = wallet;
     }
 
     //    
@@ -37,11 +43,5 @@ contract Wallets {
             totalBalance = totalBalance.add(wallet.balance);
         }
         return totalBalance;
-    } 
-
-    //
-    function totalDeposits(address _user) public view returns(uint8) {
-        Wallet memory wallet = wallets[_user];
-        return wallet.deposits;
     }
 }

@@ -17,16 +17,6 @@ library Roles {
     }
 
     //
-    function transferRole(Data storage self, address _from, address _to) public returns(bool) {
-        if (self.roles[_to] == self.roles[_from]) {
-            return false; // already has that role
-        }
-        self.roles[_to] = self.roles[_from];
-        self.roles[_from] = 0;
-        return true;
-    }
-
-    //
     function hasRole(Data storage self, address _user, Role _role) public view returns(bool) {
         return (self.roles[_user] <= uint256(_role));
     }

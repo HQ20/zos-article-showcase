@@ -12,6 +12,11 @@ contract MockRoles {
     }
 
     //
+    function transferRole(address _from, address _to) public returns(bool) {
+        return Roles.transferRole(roles, _from, _to);
+    }
+
+    //
     function hasRole(address _user, uint256 _role) public view returns(bool) {
         return Roles.hasRole(roles, _user, _role);
     }

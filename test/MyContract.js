@@ -9,8 +9,8 @@ chai.use(require('chai-bignumber')()).should();
 contract('MyContract', (accounts) => {
     let myContract;
     let mockRoles;
-    const mainAccount = accounts[0];
-    const zosDeployer = accounts[1];
+    const zosDeployer = accounts[0];
+    const userAdmin = accounts[1];
     const someUser = accounts[2];
     const depositAmount = 10000000;
 
@@ -22,10 +22,10 @@ contract('MyContract', (accounts) => {
     describe('Test some wallet methods', () => {
         before(async () => {
             myContract = await MyContract.new();
-            myContract.initialize('Hello', { from: mainAccount });
+            myContract.initialize('Hello', userAdmin, { from: zosDeployer });
         });
         it('add user wallet method', async () => {
-            await myContract.addUserWallet(someUser, { from: mainAccount });
+            await myContract.addUserWallet(someUser, { from: userAdmin });
         });
         it('deposit method', async () => {
             await myContract.deposit({ value: depositAmount, from: someUser });
@@ -40,13 +40,13 @@ contract('MyContract', (accounts) => {
         before(async () => {
             myContract = await MyContract.new();
             mockRoles = await MockRoles.new();
-            myContract.initialize('Hello', { from: mainAccount });
+            myContract.initialize('Hello', userAdmin, { from: zosDeployer });
         });
         it('add role method', async () => {
             // enum Role { None, Owner, Admin, Regist }
             const roleId = 1;
             assert.equal(await mockRoles.hasRole(someUser, roleId), false, '');
-            await mockRoles.setRole(someUser, roleId, { from: mainAccount });
+            await mockRoles.setRole(someUser, roleId, { from: userAdmin });
             assert.equal(await mockRoles.hasRole(someUser, roleId), true, '');
             assert.equal(await mockRoles.hasRole(someUser, roleId + 1), true, '');
         });

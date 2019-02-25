@@ -11,12 +11,13 @@ contract MyContract is ERC20, Wallets {
 
     //
     function initialize(
-        string memory _msg
+        string memory _msg,
+        address _initWalletOwner
     ) 
         public
         initializer 
     {
         publicMessage = _msg;
-        _initWallet(msg.sender);
+        _initWallet(_initWalletOwner);
     }
 }

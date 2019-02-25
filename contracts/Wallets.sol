@@ -15,7 +15,7 @@ contract Wallets {
 
     //
     function _initWallet(address _owner) internal {
-        Roles.setRole(roles, _owner, Roles.Role.Admin);
+        Roles.setRole(roles, _owner, uint256(Roles.Role.Admin));
     }
 
     //
@@ -27,7 +27,11 @@ contract Wallets {
 
     //    
     function addUserWallet(address _user) public {
-        require(Roles.hasRole(roles, _user, Roles.Role.Regist), "User does not have required role.");
+        require(
+            Roles.hasRole(roles, msg.sender,
+            uint256(Roles.Role.Admin)),
+            "User does not have required role."
+        );
         Wallet memory wallet;
         wallet.balance = 0;
         wallets[_user] = wallet;
@@ -39,7 +43,7 @@ contract Wallets {
         uint256 totalUsers = usersArray.length;
         uint256 totalBalance = 0;
         for (uint256 i = 0; i < totalUsers; i += 1) {
-            Wallet memory wallet = wallets[msg.sender];
+            Wallet memory wallet = wallets[usersArray[i]];
             totalBalance = totalBalance.add(wallet.balance);
         }
         return totalBalance;
